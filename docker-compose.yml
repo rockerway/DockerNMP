@@ -1,0 +1,32 @@
+version: '2'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginxDockerfile
+    ports:
+      - 80:80
+      - 443:80
+    links:
+      - php-fpm
+    volumes:
+      - project:/usr/share/nginx/app
+  php-fpm:
+    build:
+      context: .
+      dockerfile: php-fpmDockerfile
+    links:
+      - database
+    volumes:
+      - project:/usr/share/nginx/app
+  database:
+    image: mysql/mysql-server
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: laravel
+      MYSQL_USER=homestead: laravel
+      MYSQL_PASSWORD: password
+volumes:
+  project:

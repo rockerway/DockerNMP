@@ -12,6 +12,8 @@ services:
     volumes:
       - project:/usr/share/nginx/app
   php-fpm:
+    depends_on:
+      - database
     build:
       context: .
       dockerfile: php-fpmDockerfile
@@ -19,14 +21,14 @@ services:
       - database
     volumes:
       - project:/usr/share/nginx/app
+    environment:
+      - DB_HOST=database
   database:
-    image: mysql/mysql-server
+    image: mysql
     ports:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: laravel
-      MYSQL_USER=homestead: laravel
-      MYSQL_PASSWORD: password
 volumes:
   project:
